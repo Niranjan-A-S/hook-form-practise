@@ -6,14 +6,16 @@ interface IFormValues {
   age: number;
   gender: "Male" | "Female";
   verification: boolean;
+  Title: string;
 }
 
 export const Form = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
     watch,
+    setValue,
   } = useForm<IFormValues>({
     defaultValues: {
       name: "Niranjan",
@@ -23,7 +25,9 @@ export const Form = () => {
     },
   });
 
-  const onSubmit = handleSubmit((data) => console.log(data));
+  const onSubmit = handleSubmit((data) => console.log({ data }));
+
+  //   console.log(isDirty); //initially false and changes to true on onChange
 
   //   const { age, gender, name, verification } = watch(); //ONE METHOD
   //   const [name, age, gender, verification] = watch([
@@ -74,6 +78,12 @@ export const Form = () => {
         <option value={"Male"}>Male</option>
         <option value={"Female"}>Female</option>
       </select>
+      <select {...register("Title", { required: true })}>
+        <option value="Mr">Mr</option>
+        <option value="Mrs">Mrs</option>
+        <option value="Miss">Miss</option>
+        <option value="Dr">Dr</option>
+      </select>
       <section>
         <label>Are you a human? </label>
         <input
@@ -84,16 +94,17 @@ export const Form = () => {
         />
         <sup>{errors.verification?.message}</sup>
       </section>
+      <button
+        type="button"
+        onClick={() => {
+          setValue("name", "Bill");
+          setValue("age", 34);
+        }}
+      >
+        Set Value
+      </button>
       <button type="submit">Submit</button>
       <>{}</>
     </form>
   );
 };
-function useCallback(
-  arg0: (
-    e?: import("react").BaseSyntheticEvent<object, any, any> | undefined
-  ) => Promise<void>,
-  arg1: never[]
-) {
-  throw new Error("Function not implemented.");
-}
